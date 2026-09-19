@@ -1,0 +1,9 @@
+# MNIST dataset (downloaded automatically on first run)
+data/
+
+# Trained model weights (regenerate by running the script)
+*.pth
+
+# Python cache
+__pycache__/
+*.pyc
