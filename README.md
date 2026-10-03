@@ -1,78 +1,36 @@
-# Handwritten Digit Recognition (CNN) 🔢
+# MNIST from scratch with a CNN
 
-A **Convolutional Neural Network** built with PyTorch that recognizes handwritten digits (0-9) from the MNIST dataset, reaching **~99% test accuracy**.
-
-This is a deep learning project showing the complete pipeline: data loading, CNN architecture design, training loop, evaluation, and saving/loading a trained model.
-
-## 🎯 Why this project matters
-
-MNIST is the "hello world" of deep learning — but it's also a serious benchmark. A CNN here is the natural stepping stone to image recognition, self-driving cars, medical imaging, and more. Every interview panel recognizes this project.
-
-## 🧠 CNN Architecture
+A convolutional network in PyTorch, trained to **98.99%** test accuracy.
 
 ```
-Input: 28x28 grayscale image
-  └─ Conv2D (32 filters, 3x3) → ReLU → MaxPool(2x2)
-  └─ Conv2D (64 filters, 3x3) → ReLU → MaxPool(2x2)
-  └─ Dropout (25%) to prevent overfitting
-  └─ Flatten → Fully Connected (128) → ReLU
-  └─ Fully Connected (10) → 10 digit classes
+28x28 grayscale
+  └─ Conv2D(32, 3x3) → ReLU → MaxPool(2x2)
+  └─ Conv2D(64, 3x3) → ReLU → MaxPool(2x2)
+  └─ Dropout(0.25)
+  └─ Flatten → Dense(128) → ReLU
+  └─ Dense(10) → 10 classes
+
+Epoch 1  loss 0.1456
+Epoch 2  loss 0.0510
+Epoch 3  loss 0.0356
 ```
 
-**Key ideas:**
-- **Convolution** extracts local patterns (edges, curves) regardless of position
-- **Pooling** shrinks the image while keeping important features
-- **ReLU** adds non-linearity so the network can learn complex patterns
-- **Dropout** randomly disables neurons during training to reduce overfitting
+Two convolutions are enough for this dataset. MNIST digits are 28x28 and highly structured, so a second convolution layer captures combinations of edges that a single layer can't — and beyond that you're adding parameters without adding accuracy.
 
-## 📊 Results
+The remaining errors are the interesting part: the model confuses 6↔0, 8↔9, 3↔5 and 3↔8. These aren't noise. They share the same handwriting styles, and a human looking at a genuinely ambiguous sample would hesitate too. `predictions.png` shows the misclassified ones in red.
 
-```
-Epoch 1:  loss = 0.1456
-Epoch 2:  loss = 0.0510
-Epoch 3:  loss = 0.0356
-
-Test accuracy: 0.9899 (98.99%)
-```
-
-Even at 99% accuracy, the model still confuses visually similar digits (e.g. 6↔0, 8↔9) — a great discussion point about the limits of image recognition.
-
-## 📷 Outputs
-
-- `predictions.png` - Grid of test digits with model predictions (green = correct, red = wrong)
-- `digit_cnn.pth` - The trained model weights (ready to load for inference)
-
-## 🚀 How to run
+The script detects `DEVICE` and uses a GPU when one is available. First run downloads MNIST (~11MB).
 
 ```bash
 pip install -r requirements.txt
 python digit_cnn.py
 ```
 
-*First run downloads MNIST (~11MB) automatically.*
-
-## 🏗️ Project Structure
+## Files
 
 ```
-05-handwritten-digit-cnn/
-├── digit_cnn.py        # CNN model + training + evaluation
-├── digit_cnn.pth       # Trained model weights
-├── predictions.png     # Sample prediction visualization
-├── requirements.txt
-└── README.md
+digit_cnn.py        # model, training loop, evaluation
+digit_cnn.pth       # trained weights
+predictions.png     # test grid, green = correct, red = wrong
+requirements.txt
 ```
-
-## 📚 Deep Learning Concepts Covered
-
-- Convolutional Neural Networks (conv, pooling, dense layers)
-- Training loop (forward pass, loss, backpropagation)
-- Cross-entropy loss & Adam optimizer
-- Overfitting prevention (dropout)
-- Model saving/loading
-- GPU vs CPU training (`DEVICE` detection)
-
-## 💡 To Extend (great hackathon ideas)
-
-- Build a **Flask web app** where users draw a digit and the model predicts it
-- Increase accuracy with data augmentation or more epochs
-- Try transfer learning on a larger dataset (e.g. Fashion-MNIST)
